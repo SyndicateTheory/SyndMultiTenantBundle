@@ -1,0 +1,20 @@
+{
+    "name": "syndicatetheory/multi-tenant-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony2 Multi-Tenant Bundle",
+    "authors": [
+        {
+            "name": "Adrian Schneider",
+            "email": "adrian@syndicatetheory.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": "2.1.*"
+    },
+    "autoload": {
+        "psr-0": { "Synd\\MultiTenantBundle": "" }
+    },
+    "target-dir": "Synd/MultiTenantBundle"
+}
+    
