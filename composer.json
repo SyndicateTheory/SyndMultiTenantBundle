@@ -1,7 +1,7 @@
 {
     "name": "syndicatetheory/multi-tenant-bundle",
     "type": "symfony-bundle",
-    "description": "Symfony2 Multi-Tenant Bundle",
+    "description": "[IN DEVELOPMENT] Symfony2 Multi-Tenant Bundle",
     "authors": [
         {
             "name": "Adrian Schneider",
