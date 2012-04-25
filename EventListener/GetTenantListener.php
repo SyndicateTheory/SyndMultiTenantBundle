@@ -48,7 +48,9 @@ class GetTenantListener
      */
     public function onEarlyKernelRequest(GetResponseEvent $event)
     {
-        $tenant = $this->tenantStrategy->getTenant();
+        if (!$tenant = $this->tenantStrategy->getTenant()) {
+            return;
+        }
         
         $this->em->setMultiTenantRepositoryClass($this->repoClass);
         $this->em->setTenant($tenant);
