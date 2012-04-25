@@ -1,19 +1,8 @@
 parameters:
-    synd_multitenant.adapter.class: "Synd\\MultiTenantBundle\\Adapter\\ORM\DoctrineORMAdapter"
-    synd_multitenant.annotation.multitenant.class: "Synd\\MultiTenantBundle\\Annotation\\MultiTenant"
     synd_multitenant.em_class: "Synd\\MultiTenantBundle\\ORM\\MultiTenantEntityManager"
     synd_multitenant.repository_class: "Synd\\MultiTenantBundle\\ORM\\Repository\\MultiTenantEntityRepository"
     
 services:
-    synd_multitenant.annotation_driver:
-        class: "Synd\\MultiTenantBundle\\Driver\\AnnotationDriver"
-        arguments:
-            - @annotation_reader
-            - @synd_multitenant.adapter
-            
-    synd_multitenant.adapter:
-        class: %synd_multitenant.adapter.class%
-
     synd_multitenant.strategy:
         class: "Synd\\MultiTenantBundle\\TenantStrategy\\HostnameStrategy"
         arguments:
@@ -23,9 +12,6 @@ services:
         
     synd_multitenant.listener:
         class: "Synd\\MultiTenantBundle\\EventListener\\MultiTenantListener"
-        arguments:
-            - @synd_multitenant.annotation_driver
-            - @synd_multitenant.adapter
     
     synd_multitenant.subscriber:
         class: "Synd\\MultiTenantBundle\\EventListener\\GetTenantListener"
