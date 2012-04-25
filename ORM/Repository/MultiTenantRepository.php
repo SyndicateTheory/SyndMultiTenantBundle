@@ -7,6 +7,9 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\TransactionRequiredException;
 
+/**
+ * Taken from Doctrine\ORM\EntityRepository where needed
+ */
 class MultiTenantRepository extends EntityRepository
 {
     /**

@@ -9,6 +9,9 @@ use Doctrine\ORM\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\Common\EventManager;
 
+/**
+ * Taken from Doctrine\ORM\EntityManager where needed
+ */
 class MultiTenantEntityManager extends EntityManager
 {
     /**
