@@ -1,1 +1,34 @@
-Hello World
+# SyndMultiTenantBundle
+
+**STILL UNDER HEAVY DEVELOPMENT**
+
+ SyndMultiTenantBundle adds multi-tenant support to your application.  Set your entities to implement `MultiTenantInterface`, and you'll get the benefit of:
+
+- Automatically assigned to the active Tenant
+- Automatically filter repository calls by the active Tenant
+
+## What is a Tenant?
+
+A tenant is simply any class which represents an isolated set of data.  It could be a Site (for example, you use `clientname.appname.com`, or it could be a company or user account that you need unique data for.
+
+By having your tenant entity implement `TenantInterface`, you can leave the implementation details up to your application.
+
+## Tenant Choosing Strategies
+
+The bundle provides a default HostnameStrategy class, which attempts to pull the Tenant based on a Tenant.hostname field.  More will be added later, or use your own by implementing `TenantStrategyInterface` - which simply returns a `TenantInterface`.
+
+**Example candidates**:
+
+- Site entity
+- User entity
+- Company entity
+
+## Working with multi-tenant capable Entities
+
+Your entity class needs to implement `MultiTenantInterface`, which defines `getTenant` and `setTenant` methods.  After this, you can stop worrying about tenant-specific data.
+
+It works by listening to new entities being persisted, and automatically calling setTenant with the active tenant.
+
+There is also a new default EntityRepository class (`MultiTenantEntityRepository`), which is automatically instianated for mluti-tenant capable entities.  It automatically filters all queries by the active Tenant.
+
+If you have a custom repository class, be sure to extend this class instead of the default EntityRepository.
