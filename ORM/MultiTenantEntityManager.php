@@ -22,13 +22,9 @@ class MultiTenantEntityManager extends EntityManager
     protected $multiTenantRepositoryClass;
     
     /**
-     * Factory method to create EntityManager instances.
-     *
-     * @param mixed $conn An array with the connection parameters or an existing
-     *      Connection instance.
-     * @param Configuration $config The Configuration instance to use.
-     * @param EventManager $eventManager The EventManager instance to use.
-     * @return EntityManager The created EntityManager.
+     * Return self instead of hardcoded EntityManager
+     * 
+     * {@inheritDoc}
      */
     public static function create($conn, Configuration $config, EventManager $eventManager = null)
     {
@@ -77,12 +73,10 @@ class MultiTenantEntityManager extends EntityManager
     }
     
     /**
-     * Gets the repository for an entity class.
+     * Check if $entity implements MultiTenantInterface
+     * If it does, return MultiTenantEntityRepository
      * 
-     * If Entity implements TenantInterface, create a new MultiTentantRepositoryClass instance instead
-     *
-     * @param string $entityName The name of the entity.
-     * @return EntityRepository The repository class.
+     * {@inheritDoc}
      */
     public function getRepository($entityName)
     {
