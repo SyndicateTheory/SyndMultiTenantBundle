@@ -1,0 +1,42 @@
+parameters:
+    synd_multitenant.adapter.class: "Synd\\MultiTenantBundle\\Adapter\\ORM\DoctrineORMAdapter"
+    synd_multitenant.annotation.multitenant.class: "Synd\\MultiTenantBundle\\Annotation\\MultiTenant"
+    synd_multitenant.em_class: "Synd\\MultiTenantBundle\\ORM\\MultiTenantEntityManager"
+    synd_multitenant.repository_class: "Synd\\MultiTenantBundle\\ORM\\Repository\\MultiTenantEntityRepository"
+    
+services:
+    synd_multitenant.annotation_driver:
+        class: "Synd\\MultiTenantBundle\\Driver\\AnnotationDriver"
+        arguments:
+            - @annotation_reader
+            - @synd_multitenant.adapter
+            
+    synd_multitenant.adapter:
+        class: %synd_multitenant.adapter.class%
+
+    synd_multitenant.strategy:
+        class: "Synd\\MultiTenantBundle\\TenantStrategy\\HostnameStrategy"
+        arguments:
+            - @doctrine.orm.entity_manager
+            - AcmeDemoBundle:Site
+            - @service_container
+        
+    synd_multitenant.listener:
+        class: "Synd\\MultiTenantBundle\\EventListener\\MultiTenantListener"
+        arguments:
+            - @synd_multitenant.annotation_driver
+            - @synd_multitenant.adapter
+    
+    synd_multitenant.subscriber:
+        class: "Synd\\MultiTenantBundle\\EventListener\\GetTenantListener"
+        arguments:
+            - @service_container
+            - @doctrine.orm.entity_manager
+            - @synd_multitenant.strategy
+            - "Synd\\MultiTenantBundle\\ORM\\Repository\\MultiTenantRepository"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onEarlyKernelRequest  }
+            
+    synd_multitenant.tenant:
+        class: "Synd\MultiTenantBundle\\Entity\\TenantInterface"
+        scope: request
