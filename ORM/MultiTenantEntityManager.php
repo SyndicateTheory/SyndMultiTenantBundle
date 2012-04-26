@@ -93,7 +93,7 @@ class MultiTenantEntityManager extends EntityManager
     
         if ($customRepositoryClassName !== null) {
             $repository = new $customRepositoryClassName($this, $metadata);
-        } elseif ($metadata->reflClass->implementsInterface('Synd\\MultiTenantBundle\\Entity\\MultiTenantInterface')) {
+        } elseif ($this->tenant and $metadata->reflClass->implementsInterface('Synd\\MultiTenantBundle\\Entity\\MultiTenantInterface')) {
             $repository = new $this->multiTenantRepositoryClass($this, $metadata);
         } else {
             $repository = new EntityRepository($this, $metadata);
