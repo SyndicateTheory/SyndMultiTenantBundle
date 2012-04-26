@@ -11,7 +11,9 @@ services:
             - @service_container
         
     synd_multitenant.listener:
-        class: "Synd\\MultiTenantBundle\\EventListener\\MultiTenantListener"
+        class: "Synd\\MultiTenantBundle\\EventListener\\SetTenantListener"
+        tags:
+            - { name: doctrine.event_subscriber }
     
     synd_multitenant.subscriber:
         class: "Synd\\MultiTenantBundle\\EventListener\\GetTenantListener"
