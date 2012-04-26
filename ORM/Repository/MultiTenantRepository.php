@@ -94,7 +94,7 @@ class MultiTenantRepository extends EntityRepository
      */
     protected function addTenantFilter(array $criteria)
     {
-        $criteria['tenant'] = $this->_em->getTenant();
+        $criteria['tenant'] = $this->_em->getTenant()->getId();
         return $criteria;
     }
     
