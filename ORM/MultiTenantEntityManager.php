@@ -103,5 +103,4 @@ class MultiTenantEntityManager extends EntityManager
     
         return $repository;
     }
-    
 }
