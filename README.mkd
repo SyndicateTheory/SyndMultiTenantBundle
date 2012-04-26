@@ -1,7 +1,5 @@
 # SyndMultiTenantBundle
 
-**STILL UNDER HEAVY DEVELOPMENT**
-
  SyndMultiTenantBundle adds multi-tenant support to your application.  Set your entities to implement `MultiTenantInterface`, and you'll get the benefit of:
 
 - Automatically assigned to the active Tenant
