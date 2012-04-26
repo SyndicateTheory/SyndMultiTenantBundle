@@ -26,11 +26,6 @@ class SetTenantListener implements EventSubscriber
         
         if ($entity instanceof MultiTenantInterface and $tenant = $em->getTenant()) {
             $entity->setTenant($tenant);
-            
-            $metadata = $em->getClassMetadata(get_class($entity));
-
-            $uow = $em->getUnitOfWork();
-            $uow->recomputeSingleEntityChangeSet($metadata, $entity);
         }
     }
 }
