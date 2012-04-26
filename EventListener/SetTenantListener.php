@@ -24,7 +24,7 @@ class SetTenantListener implements EventSubscriber
         $em = $args->getEntityManager();
         $entity = $args->getEntity();
         
-        if ($entity instanceof MultiTenantInterface and $tenant = $em->getTenant()) {
+        if ($entity instanceof MultiTenantInterface and !$entity->getTenant() and $tenant = $em->getTenant()) {
             $entity->setTenant($tenant);
         }
     }
