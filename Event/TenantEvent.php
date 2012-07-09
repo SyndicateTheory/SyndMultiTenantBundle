@@ -9,9 +9,11 @@ class TenantEvent extends Event
 {
     protected $tenant;
     
-    public function __construct(TenantInterface $tenant)
+    public function __construct(TenantInterface $tenant = null)
     {
-        $this->tenant = $tenant;
+        if ($tenant) {
+            $this->setTenant($tenant);
+        }
     }
     
     public function setTenant(TenantInterface $tenant)
