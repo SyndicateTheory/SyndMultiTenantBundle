@@ -23,6 +23,8 @@ class HostnameStrategy implements TenantStrategyInterface
      */
     protected $hostName;
     
+    protected $fieldName;
+    
     /**
      * Brings hostname into scope from Request
      * 
@@ -30,10 +32,11 @@ class HostnameStrategy implements TenantStrategyInterface
      * @param    string        Entity name to use
      * @param    Request
      */
-    public function __construct(EntityManager $em, $entityName, ContainerInterface $container)
+    public function __construct(EntityManager $em, $entityName, $fieldName, ContainerInterface $container)
     {
         $this->em = $em;
         $this->entityName = $entityName;
+        $this->fieldName = $fieldName;
         $this->hostName = $container->get('request')->server->get('SERVER_NAME');
     }
     
@@ -43,8 +46,10 @@ class HostnameStrategy implements TenantStrategyInterface
      */
     public function getTenant()
     {
-        return $this->em
+        return $this
+            ->em
             ->getRepository($this->entityName)
-            ->findOneByHostname($this->hostName);
+            ->findOneBy(array($this->fieldName => $this->hostName))
+        ;
     }
 }

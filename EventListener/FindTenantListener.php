@@ -2,13 +2,14 @@
 
 namespace Synd\MultiTenantBundle\EventListener;
 
-use Synd\MultiTenantBundle\ORM\MultiTenantEntityManager;
+use Synd\MultiTenantBundle\Event\TenantEvent;
+use Synd\MultiTenantBundle\TenantEvents;
 use Synd\MultiTenantBundle\TenantStrategy\TenantStrategyInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-
-class GetTenantListener 
+class FindTenantListener 
 {
     /**
      * @var    ContainerInterface
@@ -16,31 +17,20 @@ class GetTenantListener
     protected $container;
     
     /**
-     * @var    MultiTenantEntityManager
+     * @var    EventDispatcherInterface
      */
-    protected $em;
+    protected $dispatcher;
     
     /**
      * @var    TenantStrategyInterface
      */
     protected $strategy;
     
-    /**
-     * @var    string        Repository Class to use
-     */
-    protected $repoClass;
-    
-    /**
-     * Brings EM and TenantStrategy into scope
-     * @param    MultiTenantEntityManager
-     * @param    TenantStrategyInterface
-     */
-    public function __construct(ContainerInterface $container, MultiTenantEntityManager $em, TenantStrategyInterface $strategy, $repoClass)
+    public function __construct(ContainerInterface $container, EventDispatcherInterface $dispatcher, TenantStrategyInterface $strategy)
     {
         $this->container = $container;
-        $this->em = $em;
+        $this->dispatcher = $dispatcher;
         $this->tenantStrategy = $strategy;
-        $this->repoClass = $repoClass;
     }
     
     /**
@@ -49,12 +39,13 @@ class GetTenantListener
     public function onEarlyKernelRequest(GetResponseEvent $event)
     {
         if (!$tenant = $this->tenantStrategy->getTenant()) {
-            return;
+            $this->dispatcher->dispatch(TenantEvents::TENANT_NOT_FOUND, $event = new TenantEvent());
+            if (!$event->getTenant()) {
+                return;
+            }
         }
         
-        $this->em->setMultiTenantRepositoryClass($this->repoClass);
-        $this->em->setTenant($tenant);
-        
+        $this->dispatcher->dispatch(TenantEvents::TENANT_FOUND, new TenantEvent($tenant));
         $this->container->set('synd_multitenant.tenant', $tenant);
     }
 }

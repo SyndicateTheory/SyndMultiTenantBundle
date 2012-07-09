@@ -5,13 +5,13 @@
 - Automatically assigned to the active Tenant
 - Automatically filter repository calls by the active Tenant
 
-## What is a Tenant?
+### What is a Tenant?
 
 A tenant is simply any class which represents an isolated set of data.  It could be a Site (for example, you use `clientname.appname.com`, or it could be a company or user account that you need unique data for.
 
 By having your tenant entity implement `TenantInterface`, you can leave the implementation details up to your application.
 
-## Tenant Choosing Strategies
+### Tenant Choosing Strategies
 
 The bundle provides a default HostnameStrategy class, which attempts to pull the Tenant based on a Tenant.hostname field.  More will be added later, or use your own by implementing `TenantStrategyInterface` - which simply returns a `TenantInterface`.
 
@@ -30,3 +30,14 @@ It works by listening to new entities being persisted, and automatically calling
 There is also a new default EntityRepository class (`MultiTenantEntityRepository`), which is automatically instianated for mluti-tenant capable entities.  It automatically filters all queries by the active Tenant.
 
 If you have a custom repository class, be sure to extend this class instead of the default EntityRepository.
+
+## Installation
+
+Install via composer.json, and add the following config to your app/config.yml
+
+    synd_multi_tenant:
+        domainstrategy:
+            entity_class: Acme\YourBundle\Entity\User
+            entity_field: domain
+
+

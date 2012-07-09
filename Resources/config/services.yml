@@ -1,30 +1,42 @@
 parameters:
-    synd_multitenant.em_class: "Synd\\MultiTenantBundle\\ORM\\MultiTenantEntityManager"
-    synd_multitenant.repository_class: "Synd\\MultiTenantBundle\\ORM\\Repository\\MultiTenantEntityRepository"
+    synd_multitenant.em_class: Synd\MultiTenantBundle\ORM\MultiTenantEntityManager
+    synd_multitenant.repository_class: Synd\MultiTenantBundle\ORM\Repository\MultiTenantRepository
     
 services:
-    synd_multitenant.strategy:
-        class: "Synd\\MultiTenantBundle\\TenantStrategy\\HostnameStrategy"
+    synd_multitenant.listener.find_tenant:
+        class: Synd\MultiTenantBundle\EventListener\FindTenantListener
+        arguments:
+            - @service_container
+            - @event_dispatcher
+            - @synd_multitenant.strategy
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onEarlyKernelRequest, priority: 10  }
+
+
+    synd_multitenant.tenantize_em:
+        class: Synd\MultiTenantBundle\EventListener\TenantizeEntityManagerListener
         arguments:
             - @doctrine.orm.entity_manager
-            - AcmeDemoBundle:Site
-            - @service_container
-        
-    synd_multitenant.listener:
-        class: "Synd\\MultiTenantBundle\\EventListener\\SetTenantListener"
+            - %synd_multitenant.repository_class%
+        tags:
+            - { name: kernel.event_listener, event: tenant.found, method: onTenantFound }
+
+
+    synd_multitenant.listener.claim_entity:
+        class: Synd\MultiTenantBundle\EventListener\ClaimEntityListener
         tags:
             - { name: doctrine.event_subscriber }
     
-    synd_multitenant.subscriber:
-        class: "Synd\\MultiTenantBundle\\EventListener\\GetTenantListener"
+
+    synd_multitenant.strategy:
+        class: Synd\MultiTenantBundle\TenantStrategy\HostnameStrategy
         arguments:
-            - @service_container
             - @doctrine.orm.entity_manager
-            - @synd_multitenant.strategy
-            - "Synd\\MultiTenantBundle\\ORM\\Repository\\MultiTenantRepository"
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onEarlyKernelRequest  }
+            - %synd_multitenant.hostname_entity%
+            - %synd_multitenant.hostname_field%
+            - @service_container
+        
             
     synd_multitenant.tenant:
-        class: "Synd\MultiTenantBundle\\Entity\\TenantInterface"
+        class: Synd\MultiTenantBundle\Entity\TenantInterface
         scope: request

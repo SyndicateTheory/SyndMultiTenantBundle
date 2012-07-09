@@ -6,7 +6,7 @@ use Synd\MultiTenantBundle\Entity\MultiTenantInterface;
 use Doctrine\Common\EventArgs;
 use Doctrine\Common\EventSubscriber;
 
-class SetTenantListener implements EventSubscriber
+class ClaimEntityListener implements EventSubscriber
 {
     public function getSubscribedEvents()
     {
