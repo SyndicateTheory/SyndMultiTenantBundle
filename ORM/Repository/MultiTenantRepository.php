@@ -12,6 +12,8 @@ use Doctrine\ORM\TransactionRequiredException;
  */
 class MultiTenantRepository extends EntityRepository
 {
+    protected $tenantFiltering = true;
+    
     /**
      * {@inheritDoc}
      */
@@ -84,7 +86,17 @@ class MultiTenantRepository extends EntityRepository
      */
     public function createQueryBuilder($alias)
     {
-        return parent::createQueryBuilder($alias)->andWhere("$alias.tenant = ?", $this->_em->getTenant());
+        $query = parent::createQueryBuilder($alias);
+        if ($this->tenantFiltering) {
+            $query->andWhere("$alias.site = ?", $this->_em->getTenant());
+        }
+        
+        return $query;
+    }
+    
+    public function setTenantFiltering($flag = true)
+    {
+        $this->tenantFiltering = $flag;
     }
     
     /**
@@ -94,8 +106,8 @@ class MultiTenantRepository extends EntityRepository
      */
     protected function addTenantFilter(array $criteria)
     {
-        if ($this->_em->getTenant()) {
-            $criteria['tenant'] = $this->_em->getTenant()->getId();
+        if ($this->tenantFiltering and $this->_em->getTenant()) {
+            $criteria['site'] = $this->_em->getTenant()->getId();
         }
         
         return $criteria;
