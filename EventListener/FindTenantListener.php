@@ -39,13 +39,13 @@ class FindTenantListener
     public function onEarlyKernelRequest(GetResponseEvent $event)
     {
         if (!$tenant = $this->tenantStrategy->getTenant()) {
-            $this->dispatcher->dispatch(TenantEvents::TENANT_NOT_FOUND, $event = new TenantEvent());
-            if (!$event->getTenant()) {
+            $this->dispatcher->dispatch(TenantEvents::TENANT_NOT_FOUND, $tEvent = new TenantEvent(null, $event));
+            if (!$tEvent->getTenant()) {
                 return;
             }
         }
         
-        $this->dispatcher->dispatch(TenantEvents::TENANT_FOUND, new TenantEvent($tenant));
+        $this->dispatcher->dispatch(TenantEvents::TENANT_FOUND, new TenantEvent($tenant, $event));
         $this->container->set('synd_multitenant.tenant', $tenant);
     }
 }
