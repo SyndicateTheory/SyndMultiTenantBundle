@@ -1,6 +1,7 @@
 parameters:
     synd_multitenant.em_class: Synd\MultiTenantBundle\ORM\MultiTenantEntityManager
     synd_multitenant.repository_class: Synd\MultiTenantBundle\ORM\Repository\MultiTenantRepository
+    synd_multitenant.tenant_field: site
     
 services:
     synd_multitenant.listener.find_tenant:

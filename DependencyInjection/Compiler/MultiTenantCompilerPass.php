@@ -17,5 +17,10 @@ class MultiTenantCompilerPass implements CompilerPassInterface
         if ($container->getParameter('doctrine.orm.entity_manager.class') == 'Doctrine\\ORM\\EntityManager') {
             $container->setParameter('doctrine.orm.entity_manager.class', 'Synd\\MultiTenantBundle\\ORM\\MultiTenantEntityManager');#'%synd_multitenant.em_class%');
         }
+        
+        if ($container->hasDefinition('doctrine.orm.default_entity_manager')) {
+            $reference = $container->getDefinition('doctrine.orm.default_entity_manager');
+            $reference->addMethodCall('setTenantField', array($container->getParameter('synd_multitenant.tenant_field')));
+        }
     }
 }

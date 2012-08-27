@@ -13,6 +13,7 @@ use Doctrine\ORM\TransactionRequiredException;
 class MultiTenantRepository extends EntityRepository
 {
     protected $tenantFiltering = true;
+    protected $tenantField;
     
     /**
      * {@inheritDoc}
@@ -99,6 +100,11 @@ class MultiTenantRepository extends EntityRepository
         $this->tenantFiltering = $flag;
     }
     
+    public function setTenantField($field)
+    {
+        $this->tenantField = $field;
+    }
+    
     /**
      * Adds a Tenant filter to our criteria
      * @param    array        Query criteria
@@ -107,7 +113,7 @@ class MultiTenantRepository extends EntityRepository
     protected function addTenantFilter(array $criteria)
     {
         if ($this->tenantFiltering and $this->_em->getTenant()) {
-            $criteria['site'] = $this->_em->getTenant()->getId();
+            $criteria[$this->tenantField] = $this->_em->getTenant()->getId();
         }
         
         return $criteria;

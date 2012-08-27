@@ -25,6 +25,11 @@ class MultiTenantEntityManager extends EntityManager
     protected $multiTenantRepositoryClass;
     
     /**
+     * @var    string        Multi tenant filtering field
+     */
+    protected $tenantField;
+    
+    /**
      * Return self instead of hardcoded EntityManager
      * 
      * {@inheritDoc}
@@ -66,6 +71,11 @@ class MultiTenantEntityManager extends EntityManager
         $this->multiTenantRepositoryClass = $class;
     }
     
+    public function setTenantField($field)
+    {
+        $this->tenantField = $field;
+    }
+    
     /**
      * Gets the active Tenant
      * @return    TenantInterface
@@ -87,14 +97,18 @@ class MultiTenantEntityManager extends EntityManager
         if (isset($this->repositories[$entityName])) {
             return $this->repositories[$entityName];
         }
-    
+        
         $metadata = $this->getClassMetadata($entityName);
         $customRepositoryClassName = $metadata->customRepositoryClassName;
     
         if ($customRepositoryClassName !== null) {
             $repository = new $customRepositoryClassName($this, $metadata);
+            if ($this->tenant and $metadata->reflClass->implementsInterface('Synd\\MultiTenantBundle\\Entity\\MultiTenantInterface')) {
+                $repository->setTenantField($this->tenantField);
+            }
         } elseif ($this->tenant and $metadata->reflClass->implementsInterface('Synd\\MultiTenantBundle\\Entity\\MultiTenantInterface')) {
             $repository = new $this->multiTenantRepositoryClass($this, $metadata);
+            $repository->setTenantField($this->tenantField);
         } else {
             $repository = new EntityRepository($this, $metadata);
         }
