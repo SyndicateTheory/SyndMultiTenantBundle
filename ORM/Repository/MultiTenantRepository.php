@@ -89,7 +89,8 @@ class MultiTenantRepository extends EntityRepository
     {
         $query = parent::createQueryBuilder($alias);
         if ($this->tenantFiltering) {
-            $query->andWhere("$alias.site = ?", $this->_em->getTenant());
+            $query->andWhere(sprintf('%s.%s = :tenant', $alias, $this->tenantField));
+            $query->setParameter('tenant', $this->_em->getTenant());
         }
         
         return $query;
