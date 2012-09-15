@@ -11,7 +11,7 @@ services:
             - @event_dispatcher
             - @synd_multitenant.strategy
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onEarlyKernelRequest, priority: 10  }
+            - { name: kernel.event_listener, event: kernel.request, method: onEarlyKernelRequest, priority: 1  }
 
 
     synd_multitenant.tenantize_em:
